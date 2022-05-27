@@ -91,6 +91,8 @@ public readonly ref struct MapFeatureData
             allotments=11,
             reservoir =12,
             basin =12
+
+
         };
         
         public EnumValuesProp PropValues { get; private set;}
