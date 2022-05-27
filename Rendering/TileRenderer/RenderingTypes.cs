@@ -226,7 +226,7 @@ public struct PopulatedPlace : BaseShape
         foreach (var entry in feature.Properties)
             if (entry.Key == MapFeatureData.EnumKeysProp.place)
             {
-                if ((int) entry.Value.PropValues == 5)
+                if ((int)entry.Value.PropValues == 5)
                 {
                     return true;
                 }

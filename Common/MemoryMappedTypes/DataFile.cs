@@ -69,7 +69,6 @@ public readonly ref struct MapFeatureData
             secondary = 8,
             tertiary = 8,
             unclassified = 8,
-            
             road = 8,
             forest = 9,
             orchard = 9,
@@ -92,7 +91,8 @@ public readonly ref struct MapFeatureData
             reservoir =12,
             basin =12,
             two = 13,
-            none = 100
+            none = 100,
+            yes = 100
 
 
         };

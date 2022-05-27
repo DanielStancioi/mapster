@@ -49,7 +49,7 @@ public static class TileRenderer
             baseShape = railway;
             shapes.Enqueue(railway, railway.ZIndex);
         }
-        else if (feature.Properties.Any(p => p.Key == MapFeatureData.EnumKeysProp.natural && featureType == GeometryType.Polygon))
+        else if (feature.Properties.Any(p => p.Key == MapFeatureData.EnumKeysProp.natural) && featureType == GeometryType.Polygon)
         {
             var coordinates = feature.Coordinates;
             var geoFeature = new GeoFeature(coordinates, feature);
