@@ -37,7 +37,7 @@ public readonly ref struct MapFeatureData
             railway = 6,
             landuse = 7,
             building = 9,
-            leisure - 10,
+            leisure = 10,
             amenity = 11,
             name = 12 
     }
@@ -52,7 +52,7 @@ public readonly ref struct MapFeatureData
             wetland = 0,
             wood = 1,
             tree_row = 1,
-            bare_rock = 2
+            bare_rock = 2,
             rock = 2,
             scree = 2,
             beach = 3,
@@ -69,7 +69,7 @@ public readonly ref struct MapFeatureData
             secondary = 8,
             tertiary = 8,
             unclassified = 8,
-            residential = 8,
+            
             road = 8,
             forest = 9,
             orchard = 9,
@@ -90,7 +90,9 @@ public readonly ref struct MapFeatureData
             winter_sports=11,
             allotments=11,
             reservoir =12,
-            basin =12
+            basin =12,
+            two = 13,
+            none = 100
 
 
         };
@@ -262,11 +264,32 @@ public unsafe class DataFile : IDisposable
 
                 if (isFeatureInBBox)
                 {
-                    var properties = new Dictionary<string, string>(feature->PropertyCount);
+                    var properties = new Dictionary<MapFeatureData.EnumKeysProp, MapFeatureData.StructValuesProp>(feature->PropertyCount);
+                    
                     for (var p = 0; p < feature->PropertyCount; ++p)
                     {
                         GetProperty(header.Tile.Value.StringsOffsetInBytes, header.Tile.Value.CharactersOffsetInBytes, p * 2 + feature->PropertiesOffset, out var key, out var value);
-                        properties.Add(key.ToString(), value.ToString());
+                        
+                        if (Enum.TryParse<MapFeatureData.EnumKeysProp>(key, out var convKey)) { 
+                            if(Enum.TryParse<MapFeatureData.StructValuesProp.EnumValuesProp>(value, out var convValue)) { 
+                                MapFeatureData.StructValuesProp structValuesProp = new MapFeatureData.StructValuesProp(convValue, "");
+                                if (!properties.ContainsKey(convKey)) { 
+                                    properties.Add(convKey, structValuesProp);
+                                }
+                            
+                            }
+                        
+                        }
+                        else if (value == "2") { 
+                            MapFeatureData.StructValuesProp structValuesProp = new MapFeatureData.StructValuesProp(MapFeatureData.StructValuesProp.EnumValuesProp.two, "");
+                            properties.Add(convKey, structValuesProp);
+                        }
+                        else if(value == "name") { 
+                            MapFeatureData.StructValuesProp structValuesProp = new MapFeatureData.StructValuesProp(MapFeatureData.StructValuesProp.EnumValuesProp.none, value.ToString());
+                            properties.Add(convKey, structValuesProp);
+                        
+                        }
+
                     }
 
                     if (!action(new MapFeatureData
