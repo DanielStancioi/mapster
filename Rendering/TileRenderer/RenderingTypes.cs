@@ -108,40 +108,40 @@ public struct GeoFeature : BaseShape
     public GeoFeature(ReadOnlySpan<Coordinate> c, MapFeatureData feature)
     {
         IsPolygon = feature.Type == GeometryType.Polygon;
-        var naturalKey = feature.Properties.FirstOrDefault(x => x.Key == "natural").Value;
+        var naturalKey = feature.Properties.FirstOrDefault(x => x.Key == MapFeatureData.EnumKeysProp.natural).Value;
         Type = GeoFeatureType.Unknown;
-        if (naturalKey != null)
+        
+        
+        if (naturalKey.PropValues == MapFeatureData.StructValuesProp.EnumValuesProp.fell ||
+            naturalKey.PropValues == MapFeatureData.StructValuesProp.EnumValuesProp.grassland ||
+            naturalKey.PropValues == MapFeatureData.StructValuesProp.EnumValuesProp.heath ||
+            naturalKey.PropValues == MapFeatureData.StructValuesProp.EnumValuesProp.moor ||
+            naturalKey.PropValues == MapFeatureData.StructValuesProp.EnumValuesProp.scrub ||
+            naturalKey.PropValues== MapFeatureData.StructValuesProp.EnumValuesProp.wetland)
         {
-            if (naturalKey == "fell" ||
-                naturalKey == "grassland" ||
-                naturalKey == "heath" ||
-                naturalKey == "moor" ||
-                naturalKey == "scrub" ||
-                naturalKey == "wetland")
-            {
-                Type = GeoFeatureType.Plain;
-            }
-            else if (naturalKey == "wood" ||
-                     naturalKey == "tree_row")
-            {
-                Type = GeoFeatureType.Forest;
-            }
-            else if (naturalKey == "bare_rock" ||
-                     naturalKey == "rock" ||
-                     naturalKey == "scree")
-            {
-                Type = GeoFeatureType.Mountains;
-            }
-            else if (naturalKey == "beach" ||
-                     naturalKey == "sand")
-            {
-                Type = GeoFeatureType.Desert;
-            }
-            else if (naturalKey == "water")
-            {
-                Type = GeoFeatureType.Water;
-            }
+            Type = GeoFeatureType.Plain;
         }
+         else if (naturalKey.PropValues== MapFeatureData.StructValuesProp.EnumValuesProp.wood ||
+                     naturalKey.PropValues== MapFeatureData.StructValuesProp.EnumValuesProp.tree_row)
+         {
+            Type = GeoFeatureType.Forest;
+         }
+         else if (naturalKey.PropValues== MapFeatureData.StructValuesProp.EnumValuesProp.bare_rock ||
+                     naturalKey.PropValues== MapFeatureData.StructValuesProp.EnumValuesProp.rock ||
+                     naturalKey.PropValues== MapFeatureData.StructValuesProp.EnumValuesProp.scree)
+         {
+            Type = GeoFeatureType.Mountains;
+         }
+         else if (naturalKey.PropValues== MapFeatureData.StructValuesProp.EnumValuesProp.beach ||
+                     naturalKey.PropValues== MapFeatureData.StructValuesProp.EnumValuesProp.sand)
+         {
+            Type = GeoFeatureType.Desert;
+         }
+         else if (naturalKey.PropValues== MapFeatureData.StructValuesProp.EnumValuesProp.water)
+         {
+            Type = GeoFeatureType.Water;
+         }
+        
 
         ScreenCoordinates = new PointF[c.Length];
         for (var i = 0; i < c.Length; i++)
@@ -202,7 +202,7 @@ public struct PopulatedPlace : BaseShape
         for (var i = 0; i < c.Length; i++)
             ScreenCoordinates[i] = new PointF((float)MercatorProjection.lonToX(c[i].Longitude),
                 (float)MercatorProjection.latToY(c[i].Latitude));
-        var name = feature.Properties.FirstOrDefault(x => x.Key == "name").Value;
+        var name = feature.Properties.FirstOrDefault(x => x.Key == MapFeatureData.EnumKeysProp.name).Value.name;
 
         if (feature.Label.IsEmpty)
         {
@@ -224,10 +224,9 @@ public struct PopulatedPlace : BaseShape
             return false;
         }
         foreach (var entry in feature.Properties)
-            if (entry.Key.StartsWith("place"))
+            if (entry.Key == MapFeatureData.EnumKeysProp.place)
             {
-                if (entry.Value.StartsWith("city") || entry.Value.StartsWith("town") ||
-                    entry.Value.StartsWith("locality") || entry.Value.StartsWith("hamlet"))
+                if ((int) entry.Value.PropValues == 5)
                 {
                     return true;
                 }
@@ -264,11 +263,11 @@ public struct Border : BaseShape
         var foundLevel = false;
         foreach (var entry in feature.Properties)
         {
-            if (entry.Key.StartsWith("boundary") && entry.Value.StartsWith("administrative"))
+            if (entry.Key == MapFeatureData.EnumKeysProp.boundary && entry.Value.PropValues == MapFeatureData.StructValuesProp.EnumValuesProp.administrative)
             {
                 foundBoundary = true;
             }
-            if (entry.Key.StartsWith("admin_level") && entry.Value == "2")
+            if (entry.Key == MapFeatureData.EnumKeysProp.admin_level && entry.Value.PropValues == MapFeatureData.StructValuesProp.EnumValuesProp.two)
             {
                 foundLevel = true;
             }

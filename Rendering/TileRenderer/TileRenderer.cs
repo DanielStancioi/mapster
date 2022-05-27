@@ -56,7 +56,7 @@ public static class TileRenderer
             baseShape = geoFeature;
             shapes.Enqueue(geoFeature, geoFeature.ZIndex);
         }
-        else if (feature.Properties.Any(p => p.Key == MapFeatureData.EnumKeysProp.boundry && p.Value.PropValues == MapFeatureData.StructValuesProp.EnumValuesProp.forest))
+        else if (feature.Properties.Any(p => p.Key == MapFeatureData.EnumKeysProp.boundary && p.Value.PropValues == MapFeatureData.StructValuesProp.EnumValuesProp.forest))
         {
             var coordinates = feature.Coordinates;
             var geoFeature = new GeoFeature(coordinates, GeoFeature.GeoFeatureType.Forest);

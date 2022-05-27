@@ -30,7 +30,7 @@ public readonly ref struct MapFeatureData
     public enum EnumKeysProp { 
             natural = 0,
             place = 1,
-            boundry = 2,
+            boundary = 2,
             admin_level = 3,
             highway = 4,
             water = 5,
